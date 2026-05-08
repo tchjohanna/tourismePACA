@@ -181,6 +181,7 @@
         .chip.theme-loisirs  { background: linear-gradient(135deg, #fd79a8, #e84393); }
         .chip.theme-sport    { background: linear-gradient(135deg, #74b9ff, #0984e3); }
         .chip.theme-insolite { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
+        .chip.theme-cascade  { background: linear-gradient(135deg, #00cec9, #0984e3); }
         .switch {
             background: white; color: var(--dark);
             border: 2px solid var(--pink); padding: 9px 14px;
@@ -268,6 +269,7 @@
         .badge.theme-loisirs  { background: #ffeef7; color: #e84393; border: 2px solid #fd79a8; }
         .badge.theme-sport    { background: #e8f4fd; color: #0984e3; border: 2px solid #74b9ff; }
         .badge.theme-insolite { background: #f3e8ff; color: #6c5ce7; border: 2px solid #a29bfe; }
+        .badge.theme-cascade  { background: #e0f7fa; color: #006064; border: 2px solid #00cec9; }
         .badge.ok      { background: #d1f2eb; color: #00b894; border: 2px solid #00cec9; }
         .badge.bad     { background: #ffeaa7; color: #e17055; border: 2px solid #f39c12; }
         .badge.terrible{ background: #ffcccc; color: #d63031; border: 2px solid #e17055; }
@@ -402,6 +404,7 @@
             <label class="chip theme-loisirs"><input type="checkbox" class="theme" value="Loisirs">🎢 Loisirs</label>
             <label class="chip theme-sport"><input type="checkbox" class="theme" value="Sport">🚣 Sport</label>
             <label class="chip theme-insolite"><input type="checkbox" class="theme" value="Insolite">🦋 Insolite</label>
+            <label class="chip theme-cascade"><input type="checkbox" class="theme" value="Cascade">💧 Cascades</label>
             <span class="spacer"></span>
             <label class="switch"><input type="checkbox" id="onlyPMR"> ♿️ PMR</label>
             <label class="switch"><input type="checkbox" id="hideAvoid"> 🚫 Masquer "À éviter"</label>
@@ -488,6 +491,27 @@ const dataBase = [
     {id:'tigerjump-84',         name:"Tiger Jump",                   city:"Monteux",               dept:"84", theme:"Loisirs",  rating:4, pmr:false, isNew:false, notes:"Trampoline park top !"},
     {id:'foret-enchantee-84',   name:"La Forêt enchantée",          city:"Venasque",              dept:"84", theme:"Nature",   rating:4, pmr:true,  isNew:false, notes:"Chemin PMR OK."},
 
+    // ── CASCADES & RIVIÈRES ── Spécial eau ────────────────────────────────────
+
+    // Var (83)
+    {id:'sillans-83',           name:"Cascade de Sillans-la-Cascade",city:"Sillans-la-Cascade",   dept:"83", theme:"Cascade",  rating:5, pmr:false, isNew:true,  notes:"42m de hauteur dans une vasque encaissée. Baignade INTERDITE (courants). Belvédère à 30min à pied. Spectaculaire !"},
+    {id:'caramy-83',            name:"Chutes du Caramy",             city:"Carcès",                dept:"83", theme:"Cascade",  rating:4, pmr:false, isNew:true,  notes:"Double cascade de 7m. Balade familiale au départ de Carcès, chapelles romanes et lac de Carcès à côté. Gratuit."},
+    {id:'vallon-carmes-83',     name:"Vallon des Carmes + cascade",  city:"Barjols",               dept:"83", theme:"Cascade",  rating:4, pmr:false, isNew:true,  notes:"Lagons turquoise et cascade dans les bois. 40min de boucle. Fermé par risque incendie l'été — vérifier avant. Gratuit."},
+    {id:'grand-baou-83',        name:"Cascade du Grand Baou",        city:"Rians",                 dept:"83", theme:"Cascade",  rating:4, pmr:false, isNew:true,  notes:"Site privé mais accès 1-2€ symbolique. Baignade possible au pied. Peu connue, cadre sauvage."},
+
+    // Gard (30)
+    {id:'sautadet-30',          name:"Cascades du Sautadet",         city:"La Roque-sur-Cèze",    dept:"30", theme:"Cascade",  rating:5, pmr:false, isNew:true,  notes:"Marmites de géant creusées dans le calcaire. BAIGNADE STRICTEMENT INTERDITE (courants mortels). Gratuit. Village médiéval classé à côté. Magique en photo !"},
+
+    // Alpes-Maritimes (06)
+    {id:'vegay-06',             name:"Cascade du Végay",             city:"Aiglun",                dept:"06", theme:"Cascade",  rating:5, pmr:false, isNew:true,  notes:"140m en 3 paliers, plus grande cascade classée des Alpes-Maritimes. Rando aller-retour 6km au départ de la mairie. 1er palier accessible, 3e palier avec corde fixe. Gratuit."},
+    {id:'courmes-06',           name:"Cascade de Courmes",           city:"Courmes (Gorges du Loup)",dept:"06",theme:"Cascade", rating:4, pmr:true,  isNew:true,  notes:"Double chute de 20m, visible depuis la route D6 — c'est gratuit et quasi sans marche ! Embruns garantis. Canyoning possible (encadré)."},
+
+    // Hautes-Alpes (05)
+    {id:'meouge-05',            name:"Gorges de la Méouge",          city:"Barret-sur-Méouge",     dept:"05", theme:"Cascade",  rating:5, pmr:false, isNew:true,  notes:"Eaux turquoise, vasques naturelles, toboggans naturels, pont romain. Baignade possible (pas en marmites !). Navette estivale depuis Châteauneuf. Gratuit — réserve Natura 2000."},
+
+    // Drôme (26)
+    {id:'choranche-26',         name:"Cascade de Choranche",         city:"Choranche (Vercors)",   dept:"26", theme:"Cascade",  rating:5, pmr:false, isNew:true,  notes:"Résurgence spectaculaire qui coule le long de la falaise. Accès à pied depuis le parking des grottes (10min). Vue sublime. Gratuit d'accès."},
+
     // ── NOUVEAUX LIEUX ── Sud-Est ─────────────────────────────────────────────
 
     // Vaucluse (84)
@@ -563,7 +587,7 @@ const notesMap = new Map(Object.entries(getEx(KEYS.notes) || {}));
 // ── HELPERS ────────────────────────────────────────────────────────────────────
 const emojiRating = r => ['','🤮','😐','🙂','👍','👌'][Math.max(0,Math.min(5,r))];
 const isAvoid = r => r <= 1;
-const iconTheme = t => ({Culture:'🏛',Nature:'🌿',Loisirs:'🎢',Sport:'🚣',Insolite:'🦋'}[t]||'📍');
+const iconTheme = t => ({Culture:'🏛',Nature:'🌿',Loisirs:'🎢',Sport:'🚣',Insolite:'🦋',Cascade:'💧'}[t]||'📍');
 const mapLink = (n,c) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([n,c].filter(Boolean).join(' '))}`;
 const slugify = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
 const isCustom = id => id.startsWith('custom-');
