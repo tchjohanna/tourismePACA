@@ -1,1 +1,602 @@
 
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>🌞 Guide Familial — Idées de sorties</title>
+
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="theme-color" content="#ff6b6b">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Guide Familial">
+
+    <link rel="apple-touch-icon" href="icon-192.png">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .app {
+            width: 100%;
+            min-height: 100vh;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .header small {
+            display: block;
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+
+        .toolbar {
+            padding: 15px;
+            background: linear-gradient(45deg, #a8edea, #fed6e3);
+        }
+
+        .searchbar {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        input,
+        select,
+        textarea,
+        button {
+            font-size: 16px;
+        }
+
+        .searchbar input,
+        .searchbar select,
+        .form-add input,
+        .form-add select,
+        .form-add textarea {
+            width: 100%;
+            border: none;
+            border-radius: 15px;
+            padding: 16px;
+            background: #f5f5f5;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .chip,
+        .switch {
+            border: none;
+            border-radius: 30px;
+            padding: 14px 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .chip {
+            color: white;
+        }
+
+        .chip.theme-culture { background: linear-gradient(135deg, #ff6b6b, #feca57); }
+        .chip.theme-nature { background: linear-gradient(135deg, #55a3ff, #48dbfb); }
+        .chip.theme-loisirs { background: linear-gradient(135deg, #ff9ff3, #f093fb); }
+        .chip.theme-sport { background: linear-gradient(135deg, #54a0ff, #2e86de); }
+        .chip.theme-insolite { background: linear-gradient(135deg, #5f27cd, #a55eea); }
+
+        .switch {
+            background: white;
+            color: #333;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 25px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            animation: fadeIn .5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card h3 {
+            margin-bottom: 12px;
+            font-size: 1.3rem;
+        }
+
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .badge {
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: .85rem;
+            font-weight: bold;
+        }
+
+        .ok {
+            background: #d1f2eb;
+            color: #008060;
+        }
+
+        .bad {
+            background: #ffeaa7;
+            color: #856404;
+        }
+
+        .terrible {
+            background: #ffd6d6;
+            color: #a00000;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn,
+        .link-btn {
+            border: none;
+            border-radius: 16px;
+            padding: 14px 18px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 50px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #feca57, #ff9ff3);
+            color: white;
+        }
+
+        .btn.secondary {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+        }
+
+        .btn.danger {
+            background: linear-gradient(135deg, #ff7675, #d63031);
+        }
+
+        .link-btn {
+            background: #e8f4fd;
+            color: #0984e3;
+        }
+
+        .favs,
+        .form-add {
+            margin: 20px;
+            padding: 20px;
+            border-radius: 25px;
+            background: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .favs h2,
+        .form-add h2 {
+            margin-bottom: 15px;
+        }
+
+        .stats {
+            text-align: center;
+            margin-top: 15px;
+            background: white;
+            border-radius: 15px;
+            padding: 12px;
+            font-weight: bold;
+        }
+
+        .footer {
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+            background: #2d3436;
+        }
+
+        .offline-banner {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff7675;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 20px;
+            z-index: 999;
+            font-weight: bold;
+        }
+
+        @media (min-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            }
+
+            .searchbar {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .searchbar input {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="offline-banner" id="offlineBanner">
+    ⚠️ Mode hors ligne actif
+</div>
+
+<div class="app">
+
+    <div class="header">
+        <h1>🌞 Guide Familial</h1>
+        <small>Des idées de sorties simples et accessibles ❤️</small>
+    </div>
+
+    <div class="toolbar">
+
+        <div class="searchbar">
+            <input id="search" type="text" placeholder="🔎 Rechercher un lieu...">
+
+            <select id="dept">
+                <option value="">Tous départements</option>
+                <option>06</option>
+                <option>07</option>
+                <option>13</option>
+                <option>26</option>
+                <option>30</option>
+                <option>69</option>
+                <option>83</option>
+                <option>84</option>
+            </select>
+        </div>
+
+        <div class="filters">
+            <label class="chip theme-culture"><input type="checkbox" value="Culture">🏛 Culture</label>
+            <label class="chip theme-nature"><input type="checkbox" value="Nature">🌿 Nature</label>
+            <label class="chip theme-loisirs"><input type="checkbox" value="Loisirs">🎢 Loisirs</label>
+            <label class="chip theme-sport"><input type="checkbox" value="Sport">🚣 Sport</label>
+            <label class="chip theme-insolite"><input type="checkbox" value="Insolite">🦋 Insolite</label>
+        </div>
+
+        <div class="stats" id="stats"></div>
+
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <div class="favs">
+        <h2>⭐ Favoris</h2>
+        <div id="favs"></div>
+    </div>
+
+    <div class="form-add">
+        <h2>➕ Ajouter un lieu</h2>
+
+        <input id="newName" placeholder="Nom du lieu">
+        <br><br>
+
+        <input id="newCity" placeholder="Ville">
+        <br><br>
+
+        <select id="newTheme">
+            <option>Nature</option>
+            <option>Culture</option>
+            <option>Loisirs</option>
+            <option>Sport</option>
+            <option>Insolite</option>
+        </select>
+
+        <br><br>
+
+        <button class="btn" id="addBtn">✨ Ajouter</button>
+    </div>
+
+    <div class="footer">
+        💾 Fonctionne hors ligne • 📱 Installable sur téléphone
+    </div>
+
+</div>
+
+<script>
+
+const STORAGE_KEY = 'guide-familial-favs';
+
+const places = [
+    {
+        id: 1,
+        name: 'Colorado Provençal',
+        city: 'Rustrel',
+        dept: '84',
+        theme: 'Nature',
+        rating: 5,
+        description: 'Ocres magnifiques et balades.'
+    },
+    {
+        id: 2,
+        name: 'Parc Spirou',
+        city: 'Monteux',
+        dept: '84',
+        theme: 'Loisirs',
+        rating: 4,
+        description: 'Très sympa pour les enfants.'
+    },
+    {
+        id: 3,
+        name: 'Palais Idéal du Facteur Cheval',
+        city: 'Hauterives',
+        dept: '26',
+        theme: 'Culture',
+        rating: 5,
+        description: 'Lieu incroyable et insolite.'
+    }
+];
+
+let favorites = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+const grid = document.getElementById('grid');
+const stats = document.getElementById('stats');
+const favs = document.getElementById('favs');
+
+function emoji(rating) {
+    if (rating >= 5) return '👌🏻';
+    if (rating >= 4) return '👍';
+    if (rating >= 3) return '🙂';
+    return '😐';
+}
+
+function render() {
+
+    const search = document.getElementById('search').value.toLowerCase();
+    const dept = document.getElementById('dept').value;
+
+    const selectedThemes = [...document.querySelectorAll('.filters input:checked')]
+        .map(el => el.value);
+
+    let filtered = places.filter(place => {
+
+        const matchesSearch = (
+            place.name.toLowerCase().includes(search) ||
+            place.city.toLowerCase().includes(search)
+        );
+
+        const matchesDept = !dept || place.dept === dept;
+
+        const matchesTheme = (
+            selectedThemes.length === 0 ||
+            selectedThemes.includes(place.theme)
+        );
+
+        return matchesSearch && matchesDept && matchesTheme;
+    });
+
+    stats.innerHTML = `🎯 ${filtered.length} résultat(s)`;
+
+    grid.innerHTML = '';
+
+    filtered.forEach(place => {
+
+        const isFav = favorites.includes(place.id);
+
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        card.innerHTML = `
+            <h3>${place.name}</h3>
+
+            <div class="badges">
+                <span class="badge ok">${place.theme}</span>
+                <span class="badge bad">📍 ${place.city}</span>
+                <span class="badge ${place.rating >= 4 ? 'ok' : 'bad'}">
+                    ${emoji(place.rating)} ${place.rating}/5
+                </span>
+            </div>
+
+            <p>${place.description}</p>
+
+            <div class="actions">
+
+                <button class="btn secondary fav-btn">
+                    ${isFav ? '★ Favori' : '☆ Favori'}
+                </button>
+
+                <a
+                    class="link-btn"
+                    target="_blank"
+                    href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name + ' ' + place.city)}"
+                >
+                    🗺️ Carte
+                </a>
+
+            </div>
+        `;
+
+        card.querySelector('.fav-btn').addEventListener('click', () => {
+            toggleFavorite(place.id);
+        });
+
+        grid.appendChild(card);
+    });
+
+    renderFavs();
+}
+
+function toggleFavorite(id) {
+
+    if (favorites.includes(id)) {
+        favorites = favorites.filter(f => f !== id);
+    } else {
+        favorites.push(id);
+    }
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
+
+    render();
+}
+
+function renderFavs() {
+
+    const favPlaces = places.filter(p => favorites.includes(p.id));
+
+    favs.innerHTML = '';
+
+    if (favPlaces.length === 0) {
+        favs.innerHTML = 'Aucun favori pour le moment ❤️';
+        return;
+    }
+
+    favPlaces.forEach(place => {
+
+        const div = document.createElement('div');
+        div.style.marginBottom = '10px';
+
+        div.innerHTML = `⭐ <strong>${place.name}</strong> — ${place.city}`;
+
+        favs.appendChild(div);
+    });
+}
+
+function addPlace() {
+
+    const name = document.getElementById('newName').value.trim();
+    const city = document.getElementById('newCity').value.trim();
+    const theme = document.getElementById('newTheme').value;
+
+    if (!name) {
+        alert('Merci de renseigner un nom.');
+        return;
+    }
+
+    places.push({
+        id: Date.now(),
+        name,
+        city,
+        dept: '--',
+        theme,
+        rating: 4,
+        description: 'Ajouté manuellement.'
+    });
+
+    document.getElementById('newName').value = '';
+    document.getElementById('newCity').value = '';
+
+    render();
+}
+
+function setupEvents() {
+
+    document.getElementById('search').addEventListener('input', render);
+    document.getElementById('dept').addEventListener('change', render);
+
+    document.querySelectorAll('.filters input').forEach(input => {
+        input.addEventListener('change', render);
+    });
+
+    document.getElementById('addBtn').addEventListener('click', addPlace);
+}
+
+window.addEventListener('online', () => {
+    document.getElementById('offlineBanner').style.display = 'none';
+});
+
+window.addEventListener('offline', () => {
+    document.getElementById('offlineBanner').style.display = 'block';
+});
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+            .then(() => {
+                console.log('✅ PWA prête');
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    });
+}
+
+setupEvents();
+render();
+
+</script>
+
+</body>
+</html>
