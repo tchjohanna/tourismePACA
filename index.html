@@ -1,602 +1,779 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🌞 Guide Familial — Idées de sorties</title>
 
+    <!-- PWA -->
     <link rel="manifest" href="manifest.json">
-
     <meta name="theme-color" content="#ff6b6b">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Guide Familial">
-
+    <meta name="apple-mobile-web-app-title" content="Guide Sorties">
     <link rel="apple-touch-icon" href="icon-192.png">
+    <meta name="description" content="Guide de sorties familiales dans le Sud-Est de la France">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+        :root {
+            --pink: #ff6b6b;
+            --yellow: #feca57;
+            --blue: #48dbfb;
+            --purple: #a29bfe;
+            --green: #00b894;
+            --orange: #fd9644;
+            --dark: #2d3436;
+            --light: #f8f9fa;
+            --radius: 20px;
+            --shadow: 0 15px 35px rgba(0,0,0,0.12);
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: 'Quicksand', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
             background-size: 400% 400%;
-            animation: gradientShift 8s ease infinite;
+            animation: gradientShift 10s ease infinite;
             min-height: 100vh;
-            color: #333;
-            overflow-x: hidden;
+            padding: 15px;
+            color: var(--dark);
         }
 
         @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
+            0%,100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
         .app {
-            width: 100%;
-            min-height: 100vh;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.97);
+            border-radius: 28px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+            overflow: hidden;
         }
 
+        /* ── HEADER ─────────────────────────────── */
         .header {
             background: linear-gradient(135deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
+            background-size: 400% 400%;
+            animation: gradientShift 6s ease infinite;
             color: white;
-            padding: 25px 20px;
+            padding: 30px 25px 25px;
             text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
         }
+        .header::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: repeating-conic-gradient(from 0deg, transparent 0deg 40deg, rgba(255,255,255,0.08) 40deg 80deg);
+            animation: rotate 25s linear infinite;
+        }
+        @keyframes rotate { to { transform: rotate(360deg); } }
 
         .header h1 {
-            font-size: 2rem;
-            margin-bottom: 10px;
+            font-family: 'Nunito', sans-serif;
+            font-size: clamp(1.8em, 4vw, 2.8em);
+            font-weight: 900;
+            text-shadow: 2px 3px 6px rgba(0,0,0,0.25);
+            position: relative; z-index: 1;
+            margin-bottom: 8px;
         }
-
         .header small {
-            display: block;
-            opacity: 0.95;
-            line-height: 1.5;
+            font-size: clamp(0.85em, 2vw, 1.1em);
+            opacity: 0.92;
+            position: relative; z-index: 1;
+            display: block; margin-bottom: 15px;
+        }
+        .header .actions {
+            display: flex; flex-wrap: wrap; gap: 10px;
+            justify-content: center;
+            position: relative; z-index: 1;
         }
 
+        /* PWA install banner */
+        #pwaBar {
+            display: none;
+            background: linear-gradient(90deg, #6c5ce7, #a29bfe);
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: 700;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        #pwaBar.show { display: flex; }
+        #pwaBar button {
+            background: white; color: #6c5ce7;
+            border: none; padding: 7px 18px;
+            border-radius: 20px; font-weight: 800;
+            cursor: pointer; font-family: 'Quicksand', sans-serif;
+        }
+        #pwaBar .dismiss {
+            background: transparent; color: rgba(255,255,255,0.7);
+            font-size: 0.85em; text-decoration: underline;
+        }
+
+        /* offline badge */
+        #offlineBadge {
+            display: none;
+            background: #fdcb6e; color: #2d3436;
+            padding: 8px 20px; text-align: center;
+            font-weight: 700; font-size: 0.9em;
+        }
+
+        /* ── TOOLBAR ─────────────────────────────── */
         .toolbar {
-            padding: 15px;
+            padding: 20px;
             background: linear-gradient(45deg, #a8edea, #fed6e3);
+            border-bottom: 3px solid var(--pink);
         }
 
         .searchbar {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            background: white;
-            padding: 15px;
-            border-radius: 20px;
+            display: flex; gap: 10px; align-items: center;
+            background: white; padding: 12px 15px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
             margin-bottom: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 3px solid var(--yellow);
+            flex-wrap: wrap;
         }
-
-        input,
-        select,
-        textarea,
-        button {
-            font-size: 16px;
+        .searchbar input {
+            flex: 1; min-width: 150px;
+            border: none; outline: none;
+            font-size: 1em; padding: 8px;
+            border-radius: 10px; background: #f8f9fa;
+            font-family: 'Quicksand', sans-serif;
         }
-
-        .searchbar input,
-        .searchbar select,
-        .form-add input,
-        .form-add select,
-        .form-add textarea {
-            width: 100%;
-            border: none;
-            border-radius: 15px;
-            padding: 16px;
-            background: #f5f5f5;
+        .searchbar select {
+            border: none; outline: none;
+            padding: 8px 12px; border-radius: 10px;
+            background: var(--blue); color: white;
+            font-weight: 700; cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
         }
 
         .filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
+            display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
         }
-
-        .chip,
-        .switch {
-            border: none;
-            border-radius: 30px;
-            padding: 14px 18px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-
         .chip {
-            color: white;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white; border: none;
+            padding: 10px 16px; border-radius: 25px;
+            cursor: pointer; font-weight: 700;
+            display: flex; align-items: center; gap: 7px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-family: 'Quicksand', sans-serif;
         }
-
-        .chip.theme-culture { background: linear-gradient(135deg, #ff6b6b, #feca57); }
-        .chip.theme-nature { background: linear-gradient(135deg, #55a3ff, #48dbfb); }
-        .chip.theme-loisirs { background: linear-gradient(135deg, #ff9ff3, #f093fb); }
-        .chip.theme-sport { background: linear-gradient(135deg, #54a0ff, #2e86de); }
-        .chip.theme-insolite { background: linear-gradient(135deg, #5f27cd, #a55eea); }
-
+        .chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 7px 20px rgba(0,0,0,0.25); }
+        .chip input[type="checkbox"] { accent-color: var(--yellow); transform: scale(1.2); }
+        .chip.theme-culture  { background: linear-gradient(135deg, #ff6b6b, #feca57); }
+        .chip.theme-nature   { background: linear-gradient(135deg, #55efc4, #00b894); }
+        .chip.theme-loisirs  { background: linear-gradient(135deg, #fd79a8, #e84393); }
+        .chip.theme-sport    { background: linear-gradient(135deg, #74b9ff, #0984e3); }
+        .chip.theme-insolite { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
         .switch {
-            background: white;
-            color: #333;
+            background: white; color: var(--dark);
+            border: 2px solid var(--pink); padding: 9px 14px;
+            border-radius: 18px; display: flex; align-items: center; gap: 7px;
+            font-weight: 700; cursor: pointer; transition: all 0.25s;
+            font-family: 'Quicksand', sans-serif;
+        }
+        .switch:hover { background: var(--pink); color: white; }
+        .spacer { flex: 1; }
+
+        .stats {
+            margin-top: 12px; text-align: center;
+            padding: 10px 15px; background: white;
+            border-radius: 12px; font-weight: 700;
+            color: var(--dark); box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            font-size: 0.9em;
         }
 
+        /* ── BUTTONS ─────────────────────────────── */
+        .btn {
+            background: linear-gradient(135deg, var(--yellow), #ff9ff3);
+            color: white; border: none;
+            padding: 11px 22px; border-radius: 18px;
+            font-weight: 800; cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.18);
+            font-size: 0.95em;
+            font-family: 'Quicksand', sans-serif;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0,0.27); }
+        .btn:active { transform: translateY(0); }
+        .btn.secondary { background: linear-gradient(135deg, #74b9ff, #0984e3); }
+        .btn.bad       { background: linear-gradient(135deg, #fd79a8, #e84393); }
+        .btn.install   { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
+        .btn.sm { padding: 6px 12px; font-size: 0.82em; border-radius: 12px; }
+
+        /* ── GRID ─────────────────────────────────── */
         .grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            padding: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 22px; padding: 25px;
+            background: linear-gradient(45deg, #f0e6ff, #fce7f3);
         }
 
         .card {
-            background: white;
-            border-radius: 25px;
-            padding: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            animation: fadeIn .5s ease;
+            background: white; border-radius: var(--radius);
+            padding: 20px; box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative; overflow: hidden;
+            opacity: 0; transform: translateY(25px);
+            animation: slideIn 0.5s ease forwards;
         }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .card::before {
+            content: ''; position: absolute;
+            top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--pink), var(--yellow), var(--blue), #ff9ff3);
         }
-
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.18);
+        }
+        .card.is-new::after {
+            content: '✨ Nouveau';
+            position: absolute; top: 10px; right: 10px;
+            background: linear-gradient(135deg, #feca57, #ff9f43);
+            color: white; font-size: 0.72em; font-weight: 800;
+            padding: 4px 10px; border-radius: 20px;
+        }
         .card h3 {
-            margin-bottom: 12px;
-            font-size: 1.3rem;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.25em; font-weight: 800;
+            color: var(--dark); margin-bottom: 12px;
         }
 
-        .badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
+        @keyframes slideIn { to { opacity: 1; transform: translateY(0); } }
 
+        /* ── BADGES ─────────────────────────────── */
         .badge {
-            padding: 8px 12px;
-            border-radius: 15px;
-            font-size: .85rem;
-            font-weight: bold;
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 6px 11px; border-radius: 12px;
+            font-size: 0.8em; font-weight: 700; margin: 2px;
+        }
+        .badge.theme-culture  { background: #ffecec; color: #d63031; border: 2px solid #ff7675; }
+        .badge.theme-nature   { background: #e8fff5; color: #00b894; border: 2px solid #55efc4; }
+        .badge.theme-loisirs  { background: #ffeef7; color: #e84393; border: 2px solid #fd79a8; }
+        .badge.theme-sport    { background: #e8f4fd; color: #0984e3; border: 2px solid #74b9ff; }
+        .badge.theme-insolite { background: #f3e8ff; color: #6c5ce7; border: 2px solid #a29bfe; }
+        .badge.ok      { background: #d1f2eb; color: #00b894; border: 2px solid #00cec9; }
+        .badge.bad     { background: #ffeaa7; color: #e17055; border: 2px solid #f39c12; }
+        .badge.terrible{ background: #ffcccc; color: #d63031; border: 2px solid #e17055; }
+        .badge.pmr     { background: #e8f4fd; color: #0984e3; border: 2px solid #74b9ff; }
+        .badge.habit   { background: #fff3cd; color: #856404; border: 2px solid #ffc107; }
+        .badge.dept    { background: #f0f0f0; color: #636e72; border: 2px solid #dfe6e9; }
+
+        .row {
+            display: flex; align-items: center;
+            gap: 8px; flex-wrap: wrap; margin: 8px 0;
         }
 
-        .ok {
-            background: #d1f2eb;
-            color: #008060;
+        .link {
+            color: #0984e3; text-decoration: none;
+            font-weight: 700; padding: 7px 13px;
+            background: #e8f4fd; border-radius: 12px;
+            transition: all 0.25s; font-size: 0.9em;
+        }
+        .link:hover { background: #0984e3; color: white; }
+
+        /* ── FAVORIS ─────────────────────────────── */
+        .favs {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            margin: 15px; padding: 22px;
+            border-radius: var(--radius);
+            border: 3px dashed var(--pink);
+        }
+        .favs h4 {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.2em; font-weight: 800;
+            text-align: center; margin-bottom: 12px;
         }
 
-        .bad {
-            background: #ffeaa7;
-            color: #856404;
-        }
-
-        .terrible {
-            background: #ffd6d6;
-            color: #a00000;
-        }
-
-        .actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .btn,
-        .link-btn {
-            border: none;
-            border-radius: 16px;
-            padding: 14px 18px;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 50px;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #feca57, #ff9ff3);
-            color: white;
-        }
-
-        .btn.secondary {
-            background: linear-gradient(135deg, #74b9ff, #0984e3);
-        }
-
-        .btn.danger {
-            background: linear-gradient(135deg, #ff7675, #d63031);
-        }
-
-        .link-btn {
-            background: #e8f4fd;
-            color: #0984e3;
-        }
-
-        .favs,
+        /* ── FORM ADD ────────────────────────────── */
         .form-add {
-            margin: 20px;
-            padding: 20px;
-            border-radius: 25px;
-            background: white;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            margin: 15px; padding: 22px;
+            border-radius: var(--radius);
+            border: 3px solid #e17055;
+        }
+        .form-add h4 {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.2em; font-weight: 800;
+            text-align: center; margin-bottom: 12px;
+        }
+        .form-add input, .form-add select {
+            width: 100%; padding: 11px;
+            border: 2px solid #fab1a0; border-radius: 10px;
+            margin: 6px 0; font-size: 0.95em; outline: none;
+            transition: border-color 0.25s;
+            font-family: 'Quicksand', sans-serif;
+        }
+        .form-add input:focus, .form-add select:focus {
+            border-color: #e17055;
+            box-shadow: 0 0 10px rgba(225,112,85,0.25);
+        }
+        .form-grid   { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 8px 0; }
+        .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 8px 0; }
+
+        /* notes inline */
+        .inline-note { display: none; margin-top: 12px; }
+        .inline-note textarea {
+            width: 100%; min-height: 75px;
+            border: 2px solid #dfe6e9; border-radius: 10px;
+            padding: 10px; resize: vertical;
+            font-family: 'Quicksand', sans-serif;
         }
 
-        .favs h2,
-        .form-add h2 {
-            margin-bottom: 15px;
-        }
-
-        .stats {
-            text-align: center;
-            margin-top: 15px;
-            background: white;
-            border-radius: 15px;
-            padding: 12px;
-            font-weight: bold;
-        }
-
+        /* ── FOOTER ─────────────────────────────── */
         .footer {
-            padding: 30px 20px;
-            text-align: center;
-            color: white;
-            background: #2d3436;
+            background: var(--dark); color: white;
+            padding: 20px; text-align: center; font-size: 0.88em;
+        }
+        .footer a { color: var(--blue); }
+
+        /* ── RESPONSIVE ─────────────────────────── */
+        @media (max-width: 600px) {
+            body { padding: 8px; }
+            .form-grid, .form-grid-3 { grid-template-columns: 1fr; }
+            .searchbar { gap: 8px; }
+            .grid { padding: 12px; gap: 14px; }
         }
 
-        .offline-banner {
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ff7675;
-            color: white;
-            padding: 12px 18px;
-            border-radius: 20px;
-            z-index: 999;
-            font-weight: bold;
-        }
-
-        @media (min-width: 768px) {
-            .grid {
-                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            }
-
-            .searchbar {
-                flex-direction: row;
-                align-items: center;
-            }
-
-            .searchbar input {
-                flex: 1;
-            }
+        @media print {
+            .toolbar, .header .actions, .favs, .form-add, #pwaBar, #offlineBadge { display: none !important; }
+            .card { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
         }
     </style>
 </head>
 <body>
-
-<div class="offline-banner" id="offlineBanner">
-    ⚠️ Mode hors ligne actif
-</div>
-
 <div class="app">
 
+    <!-- PWA Install Banner -->
+    <div id="pwaBar">
+        📱 Installe l'app sur ton téléphone pour l'avoir hors-ligne !
+        <button id="pwaInstall">⬇️ Installer</button>
+        <button class="dismiss" id="pwaDismiss">Non merci</button>
+    </div>
+
+    <!-- Offline Badge -->
+    <div id="offlineBadge">📡 Hors-ligne — tes données restent disponibles !</div>
+
     <div class="header">
-        <h1>🌞 Guide Familial</h1>
-        <small>Des idées de sorties simples et accessibles ❤️</small>
+        <h1>🌞 Guide Familial — Idées de sorties</h1>
+        <small>Filtre, cherche, ajoute aux favoris — prêt pour un week-end spontané ! 🚀</small>
+        <div class="actions">
+            <button class="btn" id="printBtn">🖨️ Imprimer</button>
+            <button class="btn secondary" id="shareBtn">🔗 Partager</button>
+            <button class="btn install" id="installBtn" style="display:none">📲 Installer l'app</button>
+        </div>
     </div>
 
     <div class="toolbar">
-
         <div class="searchbar">
-            <input id="search" type="text" placeholder="🔎 Rechercher un lieu...">
-
+            <span style="font-size:1.4em">🔎</span>
+            <input id="q" type="search" placeholder="Lieu, ville, mot-clé (ex: PMR, rivière, grotte)…" />
             <select id="dept">
-                <option value="">Tous départements</option>
-                <option>06</option>
-                <option>07</option>
-                <option>13</option>
-                <option>26</option>
-                <option>30</option>
-                <option>69</option>
-                <option>83</option>
-                <option>84</option>
+                <option value="">Tous depts</option>
+                <option>04</option><option>05</option><option>06</option><option>07</option>
+                <option>13</option><option>26</option><option>30</option><option>34</option>
+                <option>66</option><option>69</option><option>83</option><option>84</option>
+            </select>
+            <select id="sort">
+                <option value="rating">⭐ Recommandés</option>
+                <option value="az">🔤 A → Z</option>
+                <option value="dept">📍 Département</option>
             </select>
         </div>
-
         <div class="filters">
-            <label class="chip theme-culture"><input type="checkbox" value="Culture">🏛 Culture</label>
-            <label class="chip theme-nature"><input type="checkbox" value="Nature">🌿 Nature</label>
-            <label class="chip theme-loisirs"><input type="checkbox" value="Loisirs">🎢 Loisirs</label>
-            <label class="chip theme-sport"><input type="checkbox" value="Sport">🚣 Sport</label>
-            <label class="chip theme-insolite"><input type="checkbox" value="Insolite">🦋 Insolite</label>
+            <label class="chip theme-culture"><input type="checkbox" class="theme" value="Culture">🏛 Culture</label>
+            <label class="chip theme-nature"><input type="checkbox" class="theme" value="Nature">🌿 Nature</label>
+            <label class="chip theme-loisirs"><input type="checkbox" class="theme" value="Loisirs">🎢 Loisirs</label>
+            <label class="chip theme-sport"><input type="checkbox" class="theme" value="Sport">🚣 Sport</label>
+            <label class="chip theme-insolite"><input type="checkbox" class="theme" value="Insolite">🦋 Insolite</label>
+            <span class="spacer"></span>
+            <label class="switch"><input type="checkbox" id="onlyPMR"> ♿️ PMR</label>
+            <label class="switch"><input type="checkbox" id="hideAvoid"> 🚫 Masquer "À éviter"</label>
         </div>
-
         <div class="stats" id="stats"></div>
-
     </div>
 
     <div class="grid" id="grid"></div>
 
-    <div class="favs">
-        <h2>⭐ Favoris</h2>
-        <div id="favs"></div>
+    <div class="favs" id="favsBox">
+        <h4>⭐ Mes favoris</h4>
+        <div id="favsList"></div>
+        <div class="row" style="justify-content:center;margin-top:12px">
+            <button class="btn secondary sm" id="clearFavs">🗑️ Vider</button>
+            <button class="btn sm" id="copyFavs">📋 Copier la liste</button>
+        </div>
     </div>
 
     <div class="form-add">
-        <h2>➕ Ajouter un lieu</h2>
-
-        <input id="newName" placeholder="Nom du lieu">
-        <br><br>
-
-        <input id="newCity" placeholder="Ville">
-        <br><br>
-
-        <select id="newTheme">
-            <option>Nature</option>
-            <option>Culture</option>
-            <option>Loisirs</option>
-            <option>Sport</option>
-            <option>Insolite</option>
-        </select>
-
-        <br><br>
-
-        <button class="btn" id="addBtn">✨ Ajouter</button>
+        <h4>➕ Ajouter une idée perso</h4>
+        <div class="form-grid">
+            <input id="addName" placeholder="Nom du lieu *" />
+            <input id="addCity" placeholder="Ville / précision" />
+        </div>
+        <div class="form-grid-3">
+            <select id="addDept">
+                <option value="">Département *</option>
+                <option>04</option><option>05</option><option>06</option><option>07</option>
+                <option>13</option><option>26</option><option>30</option><option>34</option>
+                <option>66</option><option>69</option><option>83</option><option>84</option>
+            </select>
+            <select id="addTheme">
+                <option value="Nature">🌿 Nature</option>
+                <option value="Culture">🏛 Culture</option>
+                <option value="Loisirs">🎢 Loisirs</option>
+                <option value="Sport">🚣 Sport</option>
+                <option value="Insolite">🦋 Insolite</option>
+            </select>
+            <select id="addRating">
+                <option value="5">👌 Top</option>
+                <option value="4">👍 Super</option>
+                <option value="3">🙂 Bien</option>
+                <option value="2">😐 Bof</option>
+                <option value="1">🤮 À éviter</option>
+            </select>
+        </div>
+        <input id="addNotes" placeholder="Notes perso (PMR, durée, conseils…)" />
+        <button class="btn" id="addBtn" style="margin-top:8px">✨ Ajouter</button>
     </div>
 
     <div class="footer">
-        💾 Fonctionne hors ligne • 📱 Installable sur téléphone
+        <p>🗺️ Clic sur "Carte" → Google Maps • 💾 Données sauvegardées 30 jours</p>
+        <p style="margin-top:8px;opacity:0.6">© Guide familial — fait avec 💙 pour la famille · <a href="#">PWA v1.0</a></p>
     </div>
-
 </div>
 
 <script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const dataBase = [
+    // ── Lieux d'origine ───────────────────────────────────────────────────────
+    {id:'chateau-if-13',        name:"Château d'If",                 city:"Marseille",             dept:"13", theme:"Culture",  rating:5, pmr:false, isNew:false, notes:"Forteresse emblématique au large de Marseille."},
+    {id:'jardin-eze-06',        name:"Jardin exotique d'Èze",        city:"Èze",                   dept:"06", theme:"Nature",   rating:5, pmr:false, isNew:false, notes:"Vues mer superbes, cactus et plantes exotiques."},
+    {id:'village-fous-06',      name:"Village des Fous",             city:"Villeneuve-Loubet",     dept:"06", theme:"Loisirs",  rating:3, pmr:false, isNew:false, notes:"Parc d'attractions familial."},
+    {id:'ruisseau-louyre-07',   name:"Ruisseau de Louyre",           city:"Aubenas",               dept:"07", theme:"Nature",   rating:3, pmr:false, isNew:false, notes:"Balade le long de l'eau."},
+    {id:'mas-rouge-13',         name:"Carrière du Mas Rouge",        city:"Baux-de-Provence",      dept:"13", theme:"Culture",  rating:3, pmr:false, isNew:false, notes:"Site de carrière — prévoir chaussures fermées."},
+    {id:'grotte-cales-13',      name:"Grottes de Calès",             city:"Lamanon",               dept:"13", theme:"Nature",   rating:4, pmr:false, isNew:false, notes:"Habitat troglodyte, petite rando."},
+    {id:'parcours-grans-13',    name:"Parcours d'obstacles",         city:"Grans",                 dept:"13", theme:"Sport",    rating:3, pmr:false, isNew:false, notes:"Parcours ludique / grimpe."},
+    {id:'facteur-cheval-26',    name:"Palais Idéal du Facteur Cheval",city:"Hauterives",           dept:"26", theme:"Culture",  rating:5, pmr:true,  isNew:false, notes:"Insolite, unique — à voir absolument !"},
+    {id:'combe-laval-26',       name:"Cascade Combe Laval",          city:"Vercors",               dept:"26", theme:"Nature",   rating:4, pmr:false, isNew:false, notes:"Panorama route spectaculaire."},
+    {id:'st-laurent-royans-26', name:"Rando St-Laurent-en-Royans",  city:"Le Cholet (rivière)",   dept:"26", theme:"Nature",   rating:4, pmr:false, isNew:false, notes:"Le long de la rivière."},
+    {id:'haribo-30',            name:"Musée Haribo",                 city:"Uzès",                  dept:"30", theme:"Insolite", rating:3, pmr:true,  isNew:false, notes:"À améliorer."},
+    {id:'peaugres-69',          name:"Safari de Peaugres",           city:"Sud Lyon",              dept:"69", theme:"Loisirs",  rating:4, pmr:true,  isNew:false, notes:"Safari auto + à pied."},
+    {id:'villecroze-83',        name:"Grottes de Villecroze",        city:"Villecroze",            dept:"83", theme:"Nature",   rating:5, pmr:false, isNew:false, notes:"Top recommandé !"},
+    {id:'baudinard-83',         name:"Canoë — Gorges de Baudinard",  city:"Verdon",                dept:"83", theme:"Sport",    rating:4, pmr:false, isNew:false, notes:"Eau fraîche / gilets / casquettes !"},
+    {id:'porquerolles-83',      name:"Porquerolles",                 city:"Îles d'Hyères",         dept:"83", theme:"Nature",   rating:5, pmr:false, isNew:false, notes:"Plages, vélo — île paradisiaque."},
+    {id:'cabane-flayosc-83',    name:"Cabane dans les arbres",       city:"Flayosc",               dept:"83", theme:"Insolite", rating:5, pmr:false, isNew:false, notes:"Nuit insolite top !"},
+    {id:'papillons-84',         name:"Visite des papillons (serre)", city:"Vaucluse",              dept:"84", theme:"Insolite", rating:5, pmr:true,  isNew:false, notes:"PMR OK — 1–2h dans une serre."},
+    {id:'colorado-84',          name:"Colorado Provençal",           city:"Rustrel",               dept:"84", theme:"Nature",   rating:5, pmr:false, isNew:false, notes:"S'habiller en conséquence — ocres, poussière."},
+    {id:'spirou-84',            name:"Parc Spirou",                  city:"Monteux",               dept:"84", theme:"Loisirs",  rating:4, pmr:true,  isNew:false, notes:"Top pour les enfants !"},
+    {id:'bories-84',            name:"Village des Bories",           city:"Gordes",                dept:"84", theme:"Culture",  rating:5, pmr:false, isNew:false, notes:"Pierres sèches, très photogénique."},
+    {id:'cedres-84',            name:"Forêt des Cèdres du Luberon",  city:"Bonnieux",              dept:"84", theme:"Nature",   rating:5, pmr:true,  isNew:false, notes:"PMR OK, ombragé."},
+    {id:'merindol-84',          name:"Réserve ornithologique",       city:"Mérindol",              dept:"84", theme:"Nature",   rating:4, pmr:true,  isNew:false, notes:"Jumelles utiles."},
+    {id:'wave-84',              name:"Wave Island",                  city:"Monteux",               dept:"84", theme:"Loisirs",  rating:3, pmr:false, isNew:false, notes:"2025/08/06 — à améliorer."},
+    {id:'tigerjump-84',         name:"Tiger Jump",                   city:"Monteux",               dept:"84", theme:"Loisirs",  rating:4, pmr:false, isNew:false, notes:"Trampoline park top !"},
+    {id:'foret-enchantee-84',   name:"La Forêt enchantée",          city:"Venasque",              dept:"84", theme:"Nature",   rating:4, pmr:true,  isNew:false, notes:"Chemin PMR OK."},
 
-const STORAGE_KEY = 'guide-familial-favs';
+    // ── NOUVEAUX LIEUX ── Sud-Est ─────────────────────────────────────────────
 
-const places = [
-    {
-        id: 1,
-        name: 'Colorado Provençal',
-        city: 'Rustrel',
-        dept: '84',
-        theme: 'Nature',
-        rating: 5,
-        description: 'Ocres magnifiques et balades.'
-    },
-    {
-        id: 2,
-        name: 'Parc Spirou',
-        city: 'Monteux',
-        dept: '84',
-        theme: 'Loisirs',
-        rating: 4,
-        description: 'Très sympa pour les enfants.'
-    },
-    {
-        id: 3,
-        name: 'Palais Idéal du Facteur Cheval',
-        city: 'Hauterives',
-        dept: '26',
-        theme: 'Culture',
-        rating: 5,
-        description: 'Lieu incroyable et insolite.'
-    }
+    // Vaucluse (84)
+    {id:'abbaye-senanque-84',   name:"Abbaye de Sénanque",           city:"Gordes",                dept:"84", theme:"Culture",  rating:5, pmr:true,  isNew:true,  notes:"Lavandes en juin-juillet, somptueux. Visite guidée."},
+    {id:'fontaine-vaucluse-84', name:"Fontaine de Vaucluse",         city:"Fontaine-de-Vaucluse",  dept:"84", theme:"Nature",   rating:5, pmr:true,  isNew:true,  notes:"Source mythique de la Sorgue. Village charmant autour."},
+    {id:'dentelles-montmirail-84',name:"Dentelles de Montmirail",   city:"Gigondas",              dept:"84", theme:"Nature",   rating:5, pmr:false, isNew:true,  notes:"Balades panoramiques avec vue sur le Ventoux. Dénivelé moyen."},
+    {id:'mont-ventoux-84',      name:"Mont Ventoux — Sommet",        city:"Bédoin",                dept:"84", theme:"Nature",   rating:5, pmr:false, isNew:true,  notes:"Le Géant de Provence — voiture ou vélo. Tenue chaude au sommet même en été."},
+    {id:'village-roussillon-84',name:"Village de Roussillon",        city:"Roussillon",            dept:"84", theme:"Culture",  rating:5, pmr:false, isNew:true,  notes:"Ocres rouges spectaculaires. Sentier des ocres (45min). Vêtements à salir !"},
+    {id:'karting-carpentras-84',name:"Karting de Carpentras",        city:"Carpentras",            dept:"84", theme:"Sport",    rating:4, pmr:false, isNew:true,  notes:"Karting extérieur fun pour toute la famille (à partir de 8 ans)."},
+    {id:'zoo-safari-provence-84',name:"Réserve Africaine Sigean",   city:"Sigean",                dept:"11", theme:"Loisirs",  rating:5, pmr:true,  isNew:true,  notes:"La plus grande réserve africaine de France. Giraffes, lions, rhinos. 1 journée."},
+
+    // Var (83)
+    {id:'calanques-cassis-83',  name:"Calanques de Cassis",          city:"Cassis",                dept:"13", theme:"Nature",   rating:5, pmr:false, isNew:true,  notes:"Bateau ou rando. En semaine hors saison c'est magique. Prévoir eau+crème."},
+    {id:'gorges-verdon-83',     name:"Gorges du Verdon",             city:"Aiguines",              dept:"83", theme:"Nature",   rating:5, pmr:false, isNew:true,  notes:"Le Grand Canyon européen. Route des crêtes à faire en voiture. Vertige possible !"},
+    {id:'lac-sainte-croix-83',  name:"Lac de Sainte-Croix",         city:"Sainte-Croix-du-Verdon",dept:"83", theme:"Sport",    rating:5, pmr:true,  isNew:true,  notes:"Pédalos, kayak, baignade. Eau turquoise. Louer des pédalos à l'entrée des gorges."},
+    {id:'gapeau-83',            name:"Baignade Rivière Gapeau",      city:"Pierrefeu-du-Var",      dept:"83", theme:"Nature",   rating:4, pmr:false, isNew:true,  notes:"Spot de baignade naturelle peu connu, eau fraîche l'été. HABIT SALE requis."},
+    {id:'jardin-jardin-83',     name:"Jardin d'Oiseaux Tropicaux",   city:"La Londe-les-Maures",   dept:"83", theme:"Insolite", rating:4, pmr:true,  isNew:true,  notes:"Perroquets et oiseaux exotiques en liberté. Super avec les enfants."},
+    {id:'abbaye-thoronet-83',   name:"Abbaye du Thoronet",           city:"Le Thoronet",           dept:"83", theme:"Culture",  rating:5, pmr:true,  isNew:true,  notes:"L'une des 3 sœurs cisterciennes. Architecture sobre et émouvante. Acoustique incroyable."},
+    {id:'frejus-arenes-83',     name:"Arènes de Fréjus",             city:"Fréjus",                dept:"83", theme:"Culture",  rating:4, pmr:true,  isNew:true,  notes:"Amphithéâtre romain bien conservé. Concerts l'été. Entrée musée incluse."},
+    {id:'massif-esterel-83',    name:"Massif de l'Estérel",          city:"Saint-Raphaël",         dept:"83", theme:"Nature",   rating:5, pmr:false, isNew:true,  notes:"Roches rouges porphyre, criques turquoise. Rando ou voiture sur la corniche d'Or."},
+
+    // Alpes-de-Haute-Provence (04)
+    {id:'plateau-valensole-04', name:"Plateau de Valensole",         city:"Valensole",             dept:"04", theme:"Nature",   rating:5, pmr:true,  isNew:true,  notes:"Mer de lavande juin-juillet. Photographier tôt le matin. Gratuit. Souvenir boutiques."},
+    {id:'prieure-salagon-04',   name:"Prieuré de Salagon",           city:"Mane",                  dept:"04", theme:"Culture",  rating:4, pmr:true,  isNew:true,  notes:"Musée ethnologique + jardins médiévaux. Jardin des senteurs parfait pour les enfants."},
+    {id:'haute-bléone-04',      name:"Gorges de la Bléone",         city:"Digne-les-Bains",       dept:"04", theme:"Nature",   rating:4, pmr:false, isNew:true,  notes:"Randonnée le long de la rivière. Proche de Digne. 2h aller-retour."},
+    {id:'train-pignes-04',      name:"Train des Pignes",             city:"Digne-les-Bains",       dept:"04", theme:"Insolite", rating:5, pmr:true,  isNew:true,  notes:"Train touristique à vapeur Nice–Digne. Paysages grandioses. Réservation conseillée."},
+    {id:'observatoire-haute-provence-04',name:"Observatoire de Haute-Provence",city:"Saint-Michel-l'Observatoire",dept:"04",theme:"Insolite",rating:5,pmr:true,isNew:true,notes:"Nuits étoilées exceptionnelles. Visites guidées le soir. Village labellisé 'Ciel étoilé'."},
+
+    // Gard (30)
+    {id:'pont-du-gard-30',      name:"Pont du Gard",                 city:"Vers-Pont-du-Gard",     dept:"30", theme:"Culture",  rating:5, pmr:true,  isNew:true,  notes:"Aqueduc romain classé UNESCO. Baignade en dessous l'été. Musée + kayak disponibles."},
+    {id:'cirque-navacelles-30', name:"Cirque de Navacelles",         city:"Blandas",               dept:"30", theme:"Nature",   rating:5, pmr:false, isNew:true,  notes:"Méandre fossile époustouflant. Vue imprenable depuis le belvédère. Descente raide mais sublime."},
+    {id:'bambouseraie-30',      name:"Bambouseraie de Prafrance",    city:"Anduze",                dept:"30", theme:"Insolite", rating:4, pmr:true,  isNew:true,  notes:"Forêt de bambous géants, village japonais. Insolite et dépaysant. 2–3h de visite."},
+    {id:'grottes-clamouse-34',  name:"Grotte de Clamouse",           city:"Saint-Guilhem-le-Désert",dept:"34",theme:"Nature",   rating:5, pmr:false, isNew:true,  notes:"Concrétions spectaculaires. Visite guidée 1h30. Village médiéval de St-Guilhem à côté."},
+
+    // Alpes-Maritimes (06)
+    {id:'vallee-merveilles-06', name:"Vallée des Merveilles",        city:"Tende",                 dept:"06", theme:"Culture",  rating:5, pmr:false, isNew:true,  notes:"Gravures rupestres de l'âge du bronze. Randonnée avec guide obligatoire. Paysage lunaire."},
+    {id:'gorges-loup-06',       name:"Gorges du Loup",               city:"Gourdon",               dept:"06", theme:"Nature",   rating:4, pmr:false, isNew:true,  notes:"Route encaissée spectaculaire. Cascades et vasques. Boutiques artisanales à Gourdon."},
+    {id:'village-gourdon-06',   name:"Village de Gourdon",           city:"Gourdon",               dept:"06", theme:"Culture",  rating:4, pmr:false, isNew:true,  notes:"Village perché à 760m. Vue 180° sur la côte d'Azur. Artisanat local."},
+    {id:'antibes-marineland-06',name:"Marineland Antibes",           city:"Antibes",               dept:"06", theme:"Loisirs",  rating:4, pmr:true,  isNew:true,  notes:"Orques, dauphins, requins. Parc aquatique attenant. Prévoir une journée entière."},
+    {id:'promenade-anglaise-06',name:"Promenade des Anglais + Vieux-Nice",city:"Nice",            dept:"06", theme:"Culture",  rating:4, pmr:true,  isNew:true,  notes:"Marché Cours Saleya, socca, gelato. Gratuit. Magnifique au coucher de soleil."},
+
+    // Ardèche (07)
+    {id:'grotte-chauvet-07',    name:"Caverne du Pont d'Arc (Chauvet 2)",city:"Vallon-Pont-d'Arc",dept:"07", theme:"Culture",  rating:5, pmr:true,  isNew:true,  notes:"Réplique de la grotte la plus ancienne du monde. Bluffant. Réservation OBLIGATOIRE."},
+    {id:'pont-arc-07',          name:"Pont d'Arc — Gorges de l'Ardèche",city:"Vallon-Pont-d'Arc",dept:"07", theme:"Nature",   rating:5, pmr:false, isNew:true,  notes:"Arc naturel de 60m. Canoë sur 24km ou 32km. Camping sauvage possible. HABIT SALE."},
+    {id:'aven-orgnac-07',       name:"Aven d'Orgnac",                city:"Orgnac-l'Aven",         dept:"07", theme:"Nature",   rating:5, pmr:false, isNew:true,  notes:"Gouffre immense avec colonnes géantes. Classé Grand Site de France. Visite 1h30."},
+    {id:'ardeche-plan-eau-07',  name:"Plage du Pont de Maisonneuve", city:"Saint-Martin-d'Ardèche",dept:"07", theme:"Sport",    rating:4, pmr:false, isNew:true,  notes:"Baignade + plage de galets en fin de gorges. Idéal après le canoë."},
+
+    // Drôme (26)
+    {id:'die-clairette-26',     name:"Vignoble et Caves de Die",     city:"Die",                   dept:"26", theme:"Culture",  rating:3, pmr:true,  isNew:true,  notes:"Clairette de Die (mousseux local). Visites de caves. Marché de Die le samedi matin."},
+    {id:'saoupe-26',            name:"Gorges des Gâts",              city:"Nyons",                 dept:"26", theme:"Nature",   rating:4, pmr:false, isNew:true,  notes:"Petites gorges sauvages près de Nyons. Baignade possible. Peu fréquenté."},
+    {id:'nyons-olives-26',      name:"Musée de l'Olive — Nyons",    city:"Nyons",                 dept:"26", theme:"Culture",  rating:3, pmr:true,  isNew:true,  notes:"Oliveraies centenaires, moulin, visite gratuite partielle. Nyons = capitale de l'olive."},
 ];
 
-let favorites = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+// ── STORAGE ────────────────────────────────────────────────────────────────────
+const KEYS = { favs:'guide.favs', notes:'guide.notes', custom:'guide.custom' };
+const EXPIRY_MS = 30 * 24 * 60 * 60 * 1000;
 
-const grid = document.getElementById('grid');
-const stats = document.getElementById('stats');
-const favs = document.getElementById('favs');
-
-function emoji(rating) {
-    if (rating >= 5) return '👌🏻';
-    if (rating >= 4) return '👍';
-    if (rating >= 3) return '🙂';
-    return '😐';
+function setEx(k,v){ localStorage.setItem(k, JSON.stringify({ value:v, expiry: Date.now()+EXPIRY_MS })); }
+function getEx(k){
+    const raw = localStorage.getItem(k); if(!raw) return null;
+    try {
+        const obj = JSON.parse(raw);
+        if(obj.expiry && Date.now() > obj.expiry){ localStorage.removeItem(k); return null; }
+        return obj.value !== undefined ? obj.value : obj; // compat ancien format
+    } catch(e){ return null; }
 }
 
-function render() {
+const customItems = getEx(KEYS.custom) || [];
+let items = [...dataBase, ...customItems];
+const favs = new Set(getEx(KEYS.favs) || []);
+const notesMap = new Map(Object.entries(getEx(KEYS.notes) || {}));
 
-    const search = document.getElementById('search').value.toLowerCase();
-    const dept = document.getElementById('dept').value;
+// ── HELPERS ────────────────────────────────────────────────────────────────────
+const emojiRating = r => ['','🤮','😐','🙂','👍','👌'][Math.max(0,Math.min(5,r))];
+const isAvoid = r => r <= 1;
+const iconTheme = t => ({Culture:'🏛',Nature:'🌿',Loisirs:'🎢',Sport:'🚣',Insolite:'🦋'}[t]||'📍');
+const mapLink = (n,c) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([n,c].filter(Boolean).join(' '))}`;
+const slugify = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+const isCustom = id => id.startsWith('custom-');
 
-    const selectedThemes = [...document.querySelectorAll('.filters input:checked')]
-        .map(el => el.value);
+function sel(id){ return document.getElementById(id); }
+function qall(s){ return Array.from(document.querySelectorAll(s)); }
 
-    let filtered = places.filter(place => {
+// ── RENDER ─────────────────────────────────────────────────────────────────────
+function render(){
+    const q = sel('q').value.trim().toLowerCase();
+    const deptV = sel('dept').value;
+    const onlyPMR = sel('onlyPMR').checked;
+    const hideAvoid = sel('hideAvoid').checked;
+    const selThemes = qall('.theme:checked').map(c=>c.value);
 
-        const matchesSearch = (
-            place.name.toLowerCase().includes(search) ||
-            place.city.toLowerCase().includes(search)
-        );
-
-        const matchesDept = !dept || place.dept === dept;
-
-        const matchesTheme = (
-            selectedThemes.length === 0 ||
-            selectedThemes.includes(place.theme)
-        );
-
-        return matchesSearch && matchesDept && matchesTheme;
+    let arr = items.filter(it => {
+        if(deptV && it.dept !== deptV) return false;
+        if(onlyPMR && !it.pmr) return false;
+        if(hideAvoid && isAvoid(it.rating)) return false;
+        if(selThemes.length && !selThemes.includes(it.theme)) return false;
+        if(q){
+            const hay = `${it.name} ${it.city} ${it.dept} ${it.theme} ${it.notes}`.toLowerCase();
+            if(!hay.includes(q)) return false;
+        }
+        return true;
     });
 
-    stats.innerHTML = `🎯 ${filtered.length} résultat(s)`;
+    const sortV = sel('sort').value;
+    if(sortV==='rating') arr.sort((a,b)=>(b.rating-a.rating)||a.name.localeCompare(b.name));
+    else if(sortV==='az') arr.sort((a,b)=>a.name.localeCompare(b.name));
+    else arr.sort((a,b)=>a.dept.localeCompare(b.dept)||a.name.localeCompare(b.name));
 
-    grid.innerHTML = '';
+    const grid = sel('grid');
+    grid.innerHTML='';
 
-    filtered.forEach(place => {
-
-        const isFav = favorites.includes(place.id);
-
+    arr.forEach((it, i) => {
         const card = document.createElement('div');
-        card.className = 'card';
+        card.className = 'card' + (it.isNew?' is-new':'');
+        card.style.animationDelay = `${i*0.07}s`;
+
+        const ratingCls = isAvoid(it.rating) ? 'terrible' : (it.rating>=4 ? 'ok' : 'bad');
 
         card.innerHTML = `
-            <h3>${place.name}</h3>
-
-            <div class="badges">
-                <span class="badge ok">${place.theme}</span>
-                <span class="badge bad">📍 ${place.city}</span>
-                <span class="badge ${place.rating >= 4 ? 'ok' : 'bad'}">
-                    ${emoji(place.rating)} ${place.rating}/5
-                </span>
+            <h3>${iconTheme(it.theme)} ${it.name}</h3>
+            <div class="row">
+                <span class="badge theme-${it.theme.toLowerCase()}">${iconTheme(it.theme)} ${it.theme}</span>
+                <span class="badge dept">📍 ${it.dept}</span>
+                <span class="badge ${ratingCls}">${emojiRating(it.rating)} ${it.rating}/5</span>
+                ${it.pmr?'<span class="badge pmr">♿️ PMR</span>':''}
+                ${/HABIT SALE/i.test(it.notes||'')?'<span class="badge habit">👕 Habit sale</span>':''}
             </div>
-
-            <p>${place.description}</p>
-
-            <div class="actions">
-
-                <button class="btn secondary fav-btn">
-                    ${isFav ? '★ Favori' : '☆ Favori'}
-                </button>
-
-                <a
-                    class="link-btn"
-                    target="_blank"
-                    href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name + ' ' + place.city)}"
-                >
-                    🗺️ Carte
-                </a>
-
-            </div>
+            <p style="margin:10px 0;color:#636e72;font-size:0.92em">${[it.city,it.notes].filter(Boolean).join(' — ')}</p>
+            <div class="row actions-row" style="margin-top:12px"></div>
+            <div class="inline-note"><textarea placeholder="Ta note perso…"></textarea></div>
         `;
 
-        card.querySelector('.fav-btn').addEventListener('click', () => {
-            toggleFavorite(place.id);
+        const actRow = card.querySelector('.actions-row');
+        const noteDiv = card.querySelector('.inline-note');
+        const ta = card.querySelector('textarea');
+        ta.value = notesMap.get(it.id)||'';
+        ta.addEventListener('input',()=>{
+            notesMap.set(it.id, ta.value);
+            setEx(KEYS.notes, Object.fromEntries(notesMap));
         });
 
-        grid.appendChild(card);
+        // Fav button
+        const favBtn = document.createElement('button');
+        favBtn.className = 'btn secondary sm';
+        favBtn.textContent = favs.has(it.id)?'★ Retiré':'☆ Favori';
+        favBtn.onclick = ()=>{
+            favs.has(it.id)?favs.delete(it.id):favs.add(it.id);
+            setEx(KEYS.favs,[...favs]);
+            renderFavs(); render();
+        };
+
+        const mapA = document.createElement('a');
+        mapA.href = mapLink(it.name, it.city);
+        mapA.target='_blank'; mapA.rel='noopener';
+        mapA.className='link'; mapA.textContent='🗺️ Carte';
+
+        const noteBtn = document.createElement('button');
+        noteBtn.className='btn sm';
+        noteBtn.style.background='linear-gradient(135deg,#a29bfe,#6c5ce7)';
+        noteBtn.textContent='📝 Note';
+        noteBtn.onclick=()=>{ noteDiv.style.display=noteDiv.style.display==='block'?'none':'block'; };
+
+        actRow.append(favBtn, mapA, noteBtn);
+
+        if(isCustom(it.id)){
+            const delBtn = document.createElement('button');
+            delBtn.className='btn bad sm';
+            delBtn.textContent='🗑️';
+            delBtn.onclick=()=>{
+                if(confirm('Supprimer ce lieu ?')){
+                    items=items.filter(x=>x.id!==it.id);
+                    setEx(KEYS.custom,(getEx(KEYS.custom)||[]).filter(x=>x.id!==it.id));
+                    render(); renderFavs();
+                }
+            };
+            actRow.append(delBtn);
+        }
+
+        grid.append(card);
     });
 
+    sel('stats').textContent = `🎯 ${arr.length} lieu(x) — ${items.length} au total`;
     renderFavs();
 }
 
-function toggleFavorite(id) {
-
-    if (favorites.includes(id)) {
-        favorites = favorites.filter(f => f !== id);
-    } else {
-        favorites.push(id);
-    }
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
-
-    render();
-}
-
-function renderFavs() {
-
-    const favPlaces = places.filter(p => favorites.includes(p.id));
-
-    favs.innerHTML = '';
-
-    if (favPlaces.length === 0) {
-        favs.innerHTML = 'Aucun favori pour le moment ❤️';
-        return;
-    }
-
-    favPlaces.forEach(place => {
-
-        const div = document.createElement('div');
-        div.style.marginBottom = '10px';
-
-        div.innerHTML = `⭐ <strong>${place.name}</strong> — ${place.city}`;
-
-        favs.appendChild(div);
+function renderFavs(){
+    const box = sel('favsList');
+    const arr = items.filter(x=>favs.has(x.id));
+    if(!arr.length){ box.innerHTML='<small style="color:#636e72;display:block;text-align:center">Aucun favori. Clique "☆ Favori" sur une carte 😊</small>'; return; }
+    box.innerHTML='';
+    arr.forEach(it=>{
+        const row=document.createElement('div');
+        row.className='row';
+        row.style.cssText='background:rgba(255,255,255,0.55);padding:10px;border-radius:12px;margin:7px 0;';
+        row.innerHTML=`<div style="flex:1"><strong>${it.name}</strong> <small style="color:#636e72">(${it.dept})</small></div>`;
+        const a=document.createElement('a'); a.className='link'; a.href=mapLink(it.name,it.city); a.target='_blank'; a.textContent='🗺️'; a.style.marginRight='8px';
+        const rm=document.createElement('button'); rm.className='btn bad sm'; rm.textContent='❌';
+        rm.onclick=()=>{ favs.delete(it.id); setEx(KEYS.favs,[...favs]); renderFavs(); render(); };
+        row.append(a,rm); box.append(row);
     });
 }
 
-function addPlace() {
+// ── EVENTS ─────────────────────────────────────────────────────────────────────
+['q','dept','sort','onlyPMR','hideAvoid'].forEach(id=>{
+    const el=sel(id); if(el) el.addEventListener(id==='q'?'input':'change', render);
+});
+qall('.theme').forEach(c=>c.addEventListener('change',render));
 
-    const name = document.getElementById('newName').value.trim();
-    const city = document.getElementById('newCity').value.trim();
-    const theme = document.getElementById('newTheme').value;
+sel('printBtn').addEventListener('click',()=>window.print());
 
-    if (!name) {
-        alert('Merci de renseigner un nom.');
-        return;
-    }
-
-    places.push({
-        id: Date.now(),
-        name,
-        city,
-        dept: '--',
-        theme,
-        rating: 4,
-        description: 'Ajouté manuellement.'
-    });
-
-    document.getElementById('newName').value = '';
-    document.getElementById('newCity').value = '';
-
-    render();
-}
-
-function setupEvents() {
-
-    document.getElementById('search').addEventListener('input', render);
-    document.getElementById('dept').addEventListener('change', render);
-
-    document.querySelectorAll('.filters input').forEach(input => {
-        input.addEventListener('change', render);
-    });
-
-    document.getElementById('addBtn').addEventListener('click', addPlace);
-}
-
-window.addEventListener('online', () => {
-    document.getElementById('offlineBanner').style.display = 'none';
+sel('shareBtn').addEventListener('click',()=>{
+    const arr=items.filter(x=>favs.has(x.id));
+    const text=arr.length?'Mes idées de sorties ⭐:\n'+arr.map(x=>`• ${x.name} (${x.dept}) — ${x.city}`).join('\n'):'Aucun favori sélectionné.';
+    if(navigator.share){ navigator.share({title:'Guide Sorties',text}); }
+    else { navigator.clipboard?.writeText(text)||copyFallback(text); alert('🎉 Copié !'); }
 });
 
-window.addEventListener('offline', () => {
-    document.getElementById('offlineBanner').style.display = 'block';
+sel('clearFavs').addEventListener('click',()=>{
+    if(confirm('Vider tous les favoris ?')){ favs.clear(); setEx(KEYS.favs,[]); renderFavs(); render(); }
+});
+sel('copyFavs').addEventListener('click',()=>{
+    const arr=items.filter(x=>favs.has(x.id));
+    const text=arr.map(x=>`• ${x.name} — ${x.city} (Dept ${x.dept})`).join('\n')||'Aucun favori.';
+    navigator.clipboard?.writeText(text)||copyFallback(text);
+    alert('📋 Favoris copiés !');
 });
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js')
-            .then(() => {
-                console.log('✅ PWA prête');
-            })
-            .catch(err => {
-                console.error(err);
-            });
+sel('addBtn').addEventListener('click',()=>{
+    const name=sel('addName').value.trim();
+    const city=sel('addCity').value.trim();
+    const dept=sel('addDept').value.trim();
+    const theme=sel('addTheme').value;
+    const rating=parseInt(sel('addRating').value,10);
+    const notes=sel('addNotes').value.trim();
+    if(!name||!dept){ alert('⚠️ Nom et département obligatoires.'); return; }
+    const obj={ id:'custom-'+slugify(name+'-'+Date.now()), name, city, dept, theme, rating, pmr:/\bpmr\b/i.test(notes), isNew:false, notes };
+    items.push(obj);
+    const saved=getEx(KEYS.custom)||[]; saved.push(obj); setEx(KEYS.custom,saved);
+    ['addName','addCity','addNotes'].forEach(id=>sel(id).value='');
+    sel('addDept').value='';
+    render();
+    alert('✨ Lieu ajouté !');
+});
+
+function copyFallback(t){ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
+
+// ── PWA ────────────────────────────────────────────────────────────────────────
+let deferredPrompt = null;
+
+// Service Worker
+if('serviceWorker' in navigator){
+    window.addEventListener('load',()=>{
+        navigator.serviceWorker.register('./sw.js')
+            .then(r=>console.log('✅ SW registered', r.scope))
+            .catch(e=>console.log('❌ SW error', e));
     });
 }
 
-setupEvents();
+// Install prompt
+window.addEventListener('beforeinstallprompt', e=>{
+    e.preventDefault();
+    deferredPrompt = e;
+    sel('pwaBar').classList.add('show');
+    sel('installBtn').style.display='inline-block';
+});
+
+function triggerInstall(){
+    if(!deferredPrompt) return;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(c=>{
+        if(c.outcome==='accepted') console.log('✅ PWA installée');
+        deferredPrompt=null;
+        sel('pwaBar').classList.remove('show');
+        sel('installBtn').style.display='none';
+    });
+}
+sel('pwaInstall').addEventListener('click', triggerInstall);
+sel('installBtn').addEventListener('click', triggerInstall);
+sel('pwaDismiss').addEventListener('click', ()=>sel('pwaBar').classList.remove('show'));
+
+// Offline / Online detection
+window.addEventListener('offline',()=>{ sel('offlineBadge').style.display='block'; });
+window.addEventListener('online', ()=>{ sel('offlineBadge').style.display='none';  });
+
+// ── INIT ───────────────────────────────────────────────────────────────────────
 render();
-
 </script>
-
 </body>
 </html>
